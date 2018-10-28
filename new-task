@@ -1,0 +1,70 @@
+#!/usr/bin/sh
+
+echo "Specify your branch name: "
+read gitBranchName
+
+doGit(){
+    ### GIT CHANGES
+    echo "Fetch origin to have last updates"
+    git fetch origin
+    echo "Create it again from remote"
+    git checkout -B $gitBranchName origin/master
+    echo "Update from master"
+    git pull origin master
+}
+
+readComments()
+{
+    echo "Have you read comments? (Y/n)"
+    read haveYouReadComments
+
+    if [ $haveYouReadComments != "Y" ];
+    then
+        echo "Please read comments first"
+    else
+        doGit
+    fi
+}
+
+readTask()
+{
+    echo "Have you read task and confirmed it? (Y/n)"
+    read taskIsRead
+
+    if [ $taskIsRead = "Y" ];
+    then
+        readComments
+    else
+        echo "Please read task again"
+        exit 1
+    fi
+}
+
+anyTaskForReview()
+{
+    echo "Any tasks for review? (Y/n)"
+    read anyTaskForReview
+
+    if [ $anyTaskForReview != 'n' ];
+    then
+        echo "Please continue with task in review"
+        exit 1
+    else
+        readTask
+    fi
+}
+
+openPRs(){
+    echo "How many open PRs do you have? (Number)"
+    read openPrsCount
+
+    if [ $openPrsCount \< 4 ];
+    then
+        anyTaskForReview
+    else
+        echo "Please make PRs count < 4"
+        exit 1
+    fi
+}
+
+openPRs
