@@ -3,7 +3,7 @@
  * Usage: php create-env-file.php -d dbname -u username -p password
  */
 $envPhpSample = <<<EOT
-    <?php
+<?php
 return array (
     'backend' =>
         array (
