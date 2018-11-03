@@ -1,0 +1,76 @@
+<?php
+/**
+ * Usage: php create-env-file.php -d dbname -u username -p password
+ */
+$envPhpSample = <<<EOT
+    <?php
+return array (
+    'backend' =>
+        array (
+            'frontName' => 'admin',
+        ),
+    'install' =>
+        array (
+            'date' => 'Fri, 01 Jan 2000 00:00:00 +0000',
+        ),
+    'crypt' =>
+        array (
+            'key' => '1a2f574b9fa432a37246d0d9ee363c1b',
+        ),
+    'session' =>
+        array (
+            'save' => 'files',
+        ),
+    'db' =>
+        array (
+            'table_prefix' => '',
+            'connection' =>
+                array (
+                    'default' =>
+                        array (
+                            'host' => 'localhost', // Change if you have any other host for mysql
+                            'dbname' => '%dbname%', // change your db name here
+                            'username' => '%dbuser%', // change your username here
+                            'password' => '%dbpassword%', // change your password here
+                            'active' => '1',
+                        ),
+                ),
+        ),
+    'resource' =>
+        array (
+            'default_setup' =>
+                array (
+                    'connection' => 'default',
+                ),
+        ),
+    'x-frame-options' => 'SAMEORIGIN',
+    'MAGE_MODE' => 'developer',
+    'cache_types' =>
+        array (
+            'config' => 1,
+            'layout' => 1,
+            'block_html' => 1,
+            'collections' => 1,
+            'reflection' => 1,
+            'db_ddl' => 1,
+            'eav' => 1,
+            'config_integration' => 1,
+            'config_integration_api' => 1,
+            'full_page' => 1,
+            'translate' => 1,
+            'config_webservice' => 1,
+        ),
+);
+EOT;
+
+$defaultDbUser = 'root';
+$defaultDbPassword = 'root';
+$opts = getopt('d:u:p:');
+$userName = isset($opts['u']) ? $opts['u'] : $defaultDbUser;
+$userPassword = isset($opts['p']) ? $opts['p'] : $defaultDbPassword;
+$db = $opts['d'];
+
+$envPhpSample = str_replace('%dbname%', $db, $envPhpSample);
+$envPhpSample = str_replace('%dbuser%', $userName, $envPhpSample);
+$envPhpSample = str_replace('%dbpassword%', $userPassword, $envPhpSample);
+file_put_contents(__DIR__ . '/app/etc/env.php', $envPhpSample);
